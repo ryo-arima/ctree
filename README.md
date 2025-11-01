@@ -145,7 +145,6 @@ ctree/
 - ✅ CLI framework with Cobra
 - ✅ Multi-language command structure (generate/get/list)
 - ✅ Configuration management
-- 🚧 ctags integration (in progress)
 - 🚧 Call tree generation logic (in progress)
 - 📋 Framework-specific analyzers (planned)
 - 📋 Output formatting options (planned)
@@ -154,28 +153,6 @@ ctree/
 ## Requirements
 
 - Go 1.25+ for building
-- Universal Ctags (for source code parsing)
-
-### Installing Universal Ctags
-
-```bash
-# macOS
-brew install universal-ctags
-
-# Ubuntu/Debian
-sudo apt-get install universal-ctags
-
-# Fedora
-sudo dnf install universal-ctags
-
-# From source
-git clone https://github.com/universal-ctags/ctags.git
-cd ctags
-./autogen.sh
-./configure
-make
-sudo make install
-```
 
 ## Contributing
 
@@ -193,8 +170,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Roadmap
 
-- [ ] Complete ctags integration
-- [ ] Implement actual call tree generation
+- [ ] Implement call tree generation logic
 - [ ] Add support for more languages (Java, C/C++, Ruby, Rust, PHP)
 - [ ] Framework-specific analyzers (Django, Flask, Spring, Rails)
 - [ ] Advanced filtering and query options
@@ -208,5 +184,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- [Universal Ctags](https://ctags.io/) - Source code indexing tool
 - [Cobra](https://github.com/spf13/cobra) - CLI framework
