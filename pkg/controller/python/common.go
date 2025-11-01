@@ -65,11 +65,11 @@ Supports various Python frameworks and pure projects.`,
 	}
 
 	// フレームワーク選択オプションを追加
-	generateCmd.Flags().StringP("framework", "f", "pure", "Framework to generate (pure, django, flask)")
-	generateCmd.Flags().StringP("source", "s", ".", "Source directory or file to generate")
+	generateCmd.Flags().String("framework", "pure", "Framework to generate (pure, django, flask)")
+	generateCmd.Flags().StringP("source", "s", ".", "Source directory or file to analyze")
 	generateCmd.Flags().StringP("output", "o", "", "Output file path (default: stdout)")
 	generateCmd.Flags().BoolP("recursive", "r", true, "Recursively analyze subdirectories")
-	generateCmd.Flags().IntP("max-depth", "d", 10, "Maximum depth for recursive generation")
+	generateCmd.Flags().IntP("max-depth", "d", 10, "Maximum depth for recursive analysis")
 
 	return generateCmd
 }

@@ -2,6 +2,7 @@ package golang
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/ryo-arima/ctree/pkg/config"
 	"github.com/ryo-arima/ctree/pkg/entity/request"
@@ -60,12 +61,22 @@ Supports various Go frameworks and pure projects.`,
 				return
 			}
 
-			fmt.Print(result)
+			// Output handling
+			if outputPath != "" {
+				err = os.WriteFile(outputPath, []byte(result), 0644)
+				if err != nil {
+					fmt.Printf("Error writing to file %s: %v\n", outputPath, err)
+					return
+				}
+				fmt.Printf("Output written to %s\n", outputPath)
+			} else {
+				fmt.Print(result)
+			}
 		},
 	}
 
 	// フレームワーク選択オプションを追加
-	generateCmd.Flags().StringP("framework", "f", "pure", "Framework to generate (pure, gin, echo)")
+	generateCmd.Flags().String("framework", "pure", "Framework to generate (pure, gin, echo)")
 	generateCmd.Flags().StringP("source", "s", ".", "Source directory or file to generate")
 	generateCmd.Flags().StringP("output", "o", "", "Output file path (default: stdout)")
 	generateCmd.Flags().BoolP("recursive", "r", true, "Recursively analyze subdirectories")
@@ -79,11 +90,12 @@ func InitGetGolangCmd(conf *config.Config) *cobra.Command {
 	getCmd := &cobra.Command{
 		Use:   "golang",
 		Short: "Get specific information from Golang project",
-		Long: `Get specific information from Golang project source code using ctags.
-Available subcommands: functions, classes, variables, imports`,
+		Long: `Get specific information from Golang project source code.
+Available subcommands: call-tree, functions, classes, variables, imports`,
 	}
 
 	// サブコマンドを追加
+	getCmd.AddCommand(initGetCallTreeCmd(conf))
 	getCmd.AddCommand(initGetFunctionsCmd(conf))
 	getCmd.AddCommand(initGetClassesCmd(conf))
 	getCmd.AddCommand(initGetVariablesCmd(conf))
@@ -265,4 +277,58 @@ func initGetImportsCmd(conf *config.Config) *cobra.Command {
 			fmt.Print(result)
 		},
 	}
+}
+
+// initGetCallTreeCmd creates a get call-tree command
+func initGetCallTreeCmd(conf *config.Config) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "call-tree",
+		Short: "Get call tree from generated ctree file",
+		Long:  `Extract and display call tree information from a previously generated ctree YAML file`,
+		Run: func(cmd *cobra.Command, args []string) {
+			ctreePath, _ := cmd.Flags().GetString("ctree")
+			framework, _ := cmd.Flags().GetString("framework")
+			outputPath, _ := cmd.Flags().GetString("output")
+			format, _ := cmd.Flags().GetString("format")
+			expandSignature, _ := cmd.Flags().GetBool("expand-signature")
+
+			if ctreePath == "" {
+				fmt.Println("Error: --ctree flag is required")
+				cmd.Usage()
+				return
+			}
+
+			req := request.GenerateRequest{
+				SourcePath: ctreePath,
+				Framework:  framework,
+			}
+
+			result, err := GetCallTree(conf, req, format, expandSignature)
+			if err != nil {
+				fmt.Printf("Error: %v\n", err)
+				return
+			}
+
+			// Output handling
+			if outputPath != "" {
+				err = os.WriteFile(outputPath, []byte(result), 0644)
+				if err != nil {
+					fmt.Printf("Error writing to file %s: %v\n", outputPath, err)
+					return
+				}
+				fmt.Printf("Output written to %s\n", outputPath)
+			} else {
+				fmt.Print(result)
+			}
+		},
+	}
+
+	cmd.Flags().StringP("ctree", "c", "", "Path to ctree YAML file (required)")
+	cmd.Flags().String("framework", "pure", "Framework type (pure, gin, echo)")
+	cmd.Flags().StringP("output", "o", "", "Output file path (default: stdout)")
+	cmd.Flags().String("format", "yaml", "Output format (yaml, json, text)")
+	cmd.Flags().Bool("expand-signature", false, "Show function parameters and return values on separate lines")
+	cmd.MarkFlagRequired("ctree")
+
+	return cmd
 }

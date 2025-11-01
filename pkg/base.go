@@ -2,9 +2,12 @@ package pkg
 
 import (
 	"github.com/ryo-arima/ctree/pkg/config"
+	// c_controller "github.com/ryo-arima/ctree/pkg/controller/c"
+	// cpp_controller "github.com/ryo-arima/ctree/pkg/controller/cpp"
 	golang_controller "github.com/ryo-arima/ctree/pkg/controller/golang"
-	javascript_controller "github.com/ryo-arima/ctree/pkg/controller/javascript"
 	python_controller "github.com/ryo-arima/ctree/pkg/controller/python"
+
+	// rust_controller "github.com/ryo-arima/ctree/pkg/controller/rust"
 	"github.com/spf13/cobra"
 )
 
@@ -26,10 +29,12 @@ func InitRootCmdForCtree() *cobra.Command {
 It supports all programming languages that ctags supports.
 
 Examples:
-  ctree generate golang --framework pure    # generate call tree for Go project
-  ctree generate javascript --framework react  # generate for React project
-  ctree get golang functions                # get function information
-  ctree list golang --type functions        # list all functions`,
+  ctree generate golang --source ./myproject    # generate call tree for Go project
+  ctree generate c --source ./myapp             # generate for C project
+  ctree generate cpp --source ./myapp           # generate for C++ project
+  ctree generate rust --source ./myapp          # generate for Rust project
+  ctree get golang functions                    # get function information
+  ctree list golang --type functions            # list all functions`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			// TODO: Set output format if needed
 		},
@@ -46,8 +51,10 @@ func InitBaseCmdForCtree(conf *config.Config) BaseCmdForCtree {
 		Short: "Generate call tree from source code",
 		Long:  `Generate call tree from source code using ctags`,
 	}
+	// generateCmd.AddCommand(c_controller.InitGenerateCCmd(conf))          // TODO: Implement C support
+	// generateCmd.AddCommand(cpp_controller.InitGenerateCppCmd(conf))      // TODO: Implement C++ support
 	generateCmd.AddCommand(golang_controller.InitGenerateGolangCmd(conf))
-	generateCmd.AddCommand(javascript_controller.InitGenerateJavaScriptCmd(conf))
+	// generateCmd.AddCommand(rust_controller.InitGenerateRustCmd(conf))    // TODO: Implement Rust support
 	generateCmd.AddCommand(python_controller.InitGeneratePythonCmd(conf))
 
 	// Create get command
@@ -56,8 +63,10 @@ func InitBaseCmdForCtree(conf *config.Config) BaseCmdForCtree {
 		Short: "Get specific information from source code",
 		Long:  `Get specific information like functions, classes, variables from source code`,
 	}
+	// getCmd.AddCommand(c_controller.InitGetCCmd(conf))          // TODO: Implement C support
+	// getCmd.AddCommand(cpp_controller.InitGetCppCmd(conf))      // TODO: Implement C++ support
 	getCmd.AddCommand(golang_controller.InitGetGolangCmd(conf))
-	getCmd.AddCommand(javascript_controller.InitGetJavaScriptCmd(conf))
+	// getCmd.AddCommand(rust_controller.InitGetRustCmd(conf))    // TODO: Implement Rust support
 	getCmd.AddCommand(python_controller.InitGetPythonCmd(conf))
 
 	// Create list command
@@ -66,8 +75,10 @@ func InitBaseCmdForCtree(conf *config.Config) BaseCmdForCtree {
 		Short: "List information from source code",
 		Long:  `List information like functions, classes, variables from source code`,
 	}
+	// listCmd.AddCommand(c_controller.InitListCCmd(conf))          // TODO: Implement C support
+	// listCmd.AddCommand(cpp_controller.InitListCppCmd(conf))      // TODO: Implement C++ support
 	listCmd.AddCommand(golang_controller.InitListGolangCmd(conf))
-	listCmd.AddCommand(javascript_controller.InitListJavaScriptCmd(conf))
+	// listCmd.AddCommand(rust_controller.InitListRustCmd(conf))    // TODO: Implement Rust support
 	listCmd.AddCommand(python_controller.InitListPythonCmd(conf))
 
 	// Create version command

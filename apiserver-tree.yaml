@@ -1,0 +1,1372 @@
+source_file: etc/projects/kubernetes/cmd/kube-apiserver
+language: go
+functions:
+    - name: main
+      file: etc/projects/kubernetes/cmd/kube-apiserver/apiserver.go
+      line: 32
+      kind: function
+      signature: ""
+      calls_to:
+        - app.NewAPIServerCommand
+        - cli.Run
+        - os.Exit
+      package: main
+    - name: merge
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/aggregator.go
+      line: 62
+      kind: function
+      signature: ""
+      package: app
+      parameters:
+        - name: a
+          type: map[schema.GroupVersion]controlplaneapiserver.APIServicePriority
+        - name: b
+          type: map[schema.GroupVersion]controlplaneapiserver.APIServicePriority
+      return_types:
+        - map[schema.GroupVersion]controlplaneapiserver.APIServicePriority
+    - name: Complete
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/config.go
+      line: 61
+      kind: function
+      signature: ""
+      calls_to:
+        - Complete
+      package: app
+      receiver: Config
+      return_types:
+        - CompletedConfig
+        - error
+    - name: NewConfig
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/config.go
+      line: 74
+      kind: function
+      signature: ""
+      calls_to:
+        - controlplaneapiserver.BuildGenericConfig
+        - controlplane.DefaultAPIResourceConfigSource
+        - CreateKubeAPIServerConfig
+        - controlplaneapiserver.CreateAPIExtensionsConfig
+        - webhook.NewDefaultAuthenticationInfoResolverWrapper
+        - controlplaneapiserver.CreateAggregatorConfig
+      package: app
+      parameters:
+        - name: opts
+          type: options.CompletedOptions
+      return_types:
+        - '*Config'
+        - error
+    - name: Complete
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/completion.go
+      line: 47
+      kind: function
+      signature: ""
+      calls_to:
+        - getServiceIPAndRanges
+        - Complete
+        - kubeapiserver.DefaultWatchCacheSizes
+        - apiserveroptions.ParseWatchCacheSizes
+        - apiserveroptions.WriteWatchCacheSizes
+      package: options
+      receiver: ServerRunOptions
+      parameters:
+        - name: ctx
+          type: context.Context
+      return_types:
+        - CompletedOptions
+        - error
+    - name: getServiceIPAndRanges
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/completion.go
+      line: 94
+      kind: function
+      signature: ""
+      calls_to:
+        - strings.Split
+        - len
+        - cp.ServiceIPRange
+        - fmt.Errorf
+        - netutils.ParseCIDRSloppy
+      package: options
+      parameters:
+        - name: serviceClusterIPRanges
+          type: string
+      return_types:
+        - net.IP
+        - net.IPNet
+        - net.IPNet
+        - error
+    - name: NewServerRunOptions
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/options.go
+      line: 66
+      kind: function
+      signature: ""
+      calls_to:
+        - controlplaneapiserver.NewOptions
+        - string
+        - time.Duration
+        - append
+      package: options
+      return_types:
+        - '*ServerRunOptions'
+    - name: Flags
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/options.go
+      line: 100
+      kind: function
+      signature: ""
+      calls_to:
+        - AddFlags
+        - fss.FlagSet
+        - fs.BoolVar
+        - fs.StringVar
+        - strings.Join
+        - Names
+        - fs.IntVar
+        - fs.Var
+        - fs.StringSliceVar
+        - fs.UintVar
+        - fs.MarkDeprecated
+        - fs.DurationVar
+      package: options
+      receiver: ServerRunOptions
+      return_types:
+        - cliflag.NamedFlagSets
+    - name: validateClusterIPFlags
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 36
+      kind: function
+      signature: ""
+      calls_to:
+        - append
+        - errors.New
+        - strings.Split
+        - len
+        - Enabled
+        - validateMaxCIDRRange
+        - netutils.IsDualStackCIDRs
+        - fmt.Errorf
+      package: options
+      parameters:
+        - name: options
+          type: Extra
+      return_types:
+        - '[]error'
+    - name: validateMaxCIDRRange
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 86
+      kind: function
+      signature: ""
+      calls_to:
+        - Size
+        - fmt.Errorf
+      package: options
+      parameters:
+        - name: cidr
+          type: net.IPNet
+        - name: maxCIDRBits
+          type: int
+        - name: cidrFlag
+          type: string
+      return_types:
+        - error
+    - name: validateServiceNodePort
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 98
+      kind: function
+      signature: ""
+      calls_to:
+        - append
+        - fmt.Errorf
+        - Contains
+      package: options
+      parameters:
+        - name: options
+          type: Extra
+      return_types:
+        - '[]error'
+    - name: validatePublicIPServiceClusterIPRangeIPFamilies
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 111
+      kind: function
+      signature: ""
+      calls_to:
+        - reconcilers.Type
+        - controlplaneapiserver.ServiceIPRange
+        - fmt.Errorf
+        - netutils.IsIPv4CIDR
+        - netutils.IsIPv4
+        - String
+      package: options
+      parameters:
+        - name: extra
+          type: Extra
+        - name: generic
+          type: genericoptions.ServerRunOptions
+      return_types:
+        - '[]error'
+    - name: Validate
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 131
+      kind: function
+      signature: ""
+      calls_to:
+        - append
+        - Validate
+        - validateClusterIPFlags
+        - validateServiceNodePort
+        - validatePublicIPServiceClusterIPRangeIPFamilies
+        - fmt.Errorf
+      package: options
+      receiver: CompletedOptions
+      return_types:
+        - '[]error'
+    - name: init
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 65
+      kind: function
+      signature: ""
+      calls_to:
+        - utilruntime.Must
+        - logsapi.AddFeatureGates
+      package: app
+    - name: NewAPIServerCommand
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 70
+      kind: function
+      signature: ""
+      calls_to:
+        - options.NewServerRunOptions
+        - genericapiserver.SetupSignalContext
+        - FeatureGateFor
+        - Set
+        - rest.SetDefaultWarningHandler
+        - verflag.PrintAndExitIfRequested
+        - cmd.Flags
+        - logsapi.ValidateAndApply
+        - cliflag.PrintFlags
+        - s.Complete
+        - completedOptions.Validate
+        - len
+        - utilerrors.NewAggregate
+        - AddMetrics
+        - Run
+        - fmt.Errorf
+        - cmd.CommandPath
+        - cmd.SetContext
+        - s.Flags
+        - verflag.AddFlags
+        - namedFlagSets.FlagSet
+        - globalflag.AddGlobalFlags
+        - cmd.Name
+        - logs.SkipLoggingConfigurationFlags
+        - fs.AddFlagSet
+        - term.TerminalSize
+        - cmd.OutOrStdout
+        - cliflag.SetUsageAndHelpFunc
+      package: app
+      return_types:
+        - '*cobra.Command'
+    - name: Run
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 148
+      kind: function
+      signature: ""
+      calls_to:
+        - klog.Infof
+        - utilversion.Get
+        - klog.InfoS
+        - os.Getenv
+        - NewConfig
+        - config.Complete
+        - CreateServerChain
+        - server.PrepareRun
+        - prepared.Run
+      package: app
+      parameters:
+        - name: ctx
+          type: context.Context
+        - name: opts
+          type: options.CompletedOptions
+      return_types:
+        - error
+    - name: CreateServerChain
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 176
+      kind: function
+      signature: ""
+      calls_to:
+        - notfoundhandler.New
+        - New
+        - genericapiserver.NewEmptyDelegateWithCustomHandler
+        - ResourceEnabled
+        - WithResource
+        - controlplaneapiserver.CreateAggregatorServer
+        - CustomResourceDefinitions
+        - V1
+        - Apiextensions
+      package: app
+      parameters:
+        - name: config
+          type: CompletedConfig
+      return_types:
+        - '*aggregatorapiserver.APIAggregator'
+        - error
+    - name: CreateKubeAPIServerConfig
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 200
+      kind: function
+      signature: ""
+      calls_to:
+        - capabilities.Setup
+        - kubeAdmissionConfig.New
+        - fmt.Errorf
+        - buildServiceResolver
+        - controlplaneapiserver.CreateConfig
+        - reconcilers.Type
+        - AsNetworkContext
+        - Lookup
+        - Clone
+      package: app
+      parameters:
+        - name: opts
+          type: options.CompletedOptions
+        - name: genericConfig
+          type: '*genericapiserver.Config'
+        - name: versionedInformers
+          type: clientgoinformers.SharedInformerFactory
+        - name: storageFactory
+          type: '*serverstorage.DefaultStorageFactory'
+      return_types:
+        - '*controlplane.Config'
+        - aggregatorapiserver.ServiceResolver
+        - '[]admission.PluginInitializer'
+        - error
+    - name: SetServiceResolverForTests
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 271
+      kind: function
+      signature: ""
+      calls_to:
+        - panic
+      package: app
+      parameters:
+        - name: resolver
+          type: webhook.ServiceResolver
+      return_types:
+        - func
+    - name: buildServiceResolver
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 283
+      kind: function
+      signature: ""
+      calls_to:
+        - proxy.NewEndpointSliceIndexerGetter
+        - EndpointSlices
+        - V1
+        - informer.Discovery
+        - aggregatorapiserver.NewEndpointServiceResolver
+        - Lister
+        - Services
+        - informer.Core
+        - aggregatorapiserver.NewClusterIPServiceResolver
+        - url.Parse
+        - aggregatorapiserver.NewLoopbackServiceResolver
+      package: app
+      parameters:
+        - name: enabledAggregatorRouting
+          type: bool
+        - name: hostname
+          type: string
+        - name: informer
+          type: clientgoinformers.SharedInformerFactory
+      return_types:
+        - webhook.ServiceResolver
+        - error
+    - name: init
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 74
+      kind: function
+      signature: ""
+      package: testing
+    - name: NewDefaultTestServerOptions
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 144
+      kind: function
+      signature: ""
+      package: testing
+      return_types:
+        - '*TestServerInstanceOptions'
+    - name: StartTestServer
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 156
+      kind: function
+      signature: ""
+      calls_to:
+        - ktesting.Init
+        - NewDefaultTestServerOptions
+        - os.MkdirTemp
+        - fmt.Errorf
+        - tCtx.Cancel
+        - klog.Errorf
+        - os.RemoveAll
+        - tearDown
+        - pflag.NewFlagSet
+        - DeepCopy
+        - compatibility.DefaultKubeEffectiveVersionForTest
+        - basecompatibility.NewEffectiveVersionFromString
+        - effectiveVersion.SetEmulationVersion
+        - featureGate.EmulationVersion
+        - effectiveVersion.SetMinCompatibilityVersion
+        - featureGate.MinCompatibilityVersion
+        - basecompatibility.NewComponentGlobalsRegistry
+        - componentGlobalsRegistry.Register
+        - options.NewServerRunOptions
+        - EqualTo
+        - effectiveVersion.BinaryVersion
+        - effectiveVersion.EmulationVersion
+        - s.Flags
+        - fs.AddFlagSet
+        - createLocalhostListenerOnFreePort
+        - serveroptions.NewDelegatingAuthenticationOptions
+        - testutil.NewPrivateKey
+        - cert.NewSelfSignedCACert
+        - filepath.Join
+        - os.WriteFile
+        - testutil.EncodeCertPEM
+        - ecdsa.GenerateKey
+        - elliptic.P256
+        - rand.Int
+        - SetInt64
+        - new
+        - Add
+        - big.NewInt
+        - time.Now
+        - x509.CreateCertificate
+        - signer.Public
+        - x509.ParseCertificate
+        - pem.EncodeToMemory
+        - cert.WriteCert
+        - keyutil.MarshalPrivateKeyToPEM
+        - keyutil.WriteKey
+        - Addr
+        - pkgPath
+        - fs.Parse
+        - Enabled
+        - len
+        - componentGlobalsRegistry.Set
+        - EmulationVersion
+        - MinCompatibilityVersion
+        - featuregatetesting.SetFeatureGateVersionsDuringTest
+        - effectiveVersion.MinCompatibilityVersion
+        - GetAll
+        - featureGate.Enabled
+        - featuregatetesting.SetFeatureGatesDuringTest
+        - AddMetrics
+        - context.WithTimeout
+        - context.Background
+        - t.Cleanup
+        - ctx.Done
+        - os.CreateTemp
+        - t.Fatalf
+        - saSigningKeyFile.Name
+        - s.Complete
+        - completedOptions.Validate
+        - utilerrors.NewAggregate
+        - t.Logf
+        - app.NewConfig
+        - config.Complete
+        - app.CreateServerChain
+        - instanceOptions.StorageVersionWrapFunc
+        - make
+        - close
+        - server.PrepareRun
+        - prepared.Run
+        - kubernetes.NewForConfig
+        - wait.Poll
+        - AbsPath
+        - Get
+        - RESTClient
+        - client.CoreV1
+        - fmt.Sprintf
+        - req.Param
+        - req.Do
+        - context.TODO
+        - result.StatusCode
+        - Namespaces
+        - errors.IsNotFound
+        - GetEtcdClients
+        - restclient.CopyConfig
+        - etcdClient.Close
+      package: testing
+      parameters:
+        - name: t
+          type: ktesting.TB
+        - name: instanceOptions
+          type: '*TestServerInstanceOptions'
+        - name: customFlags
+          type: '[]string'
+        - name: storageConfig
+          type: '*storagebackend.Config'
+      return_types:
+        - TestServer
+        - error
+    - name: GetEtcdClients
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 538
+      kind: function
+      signature: ""
+      calls_to:
+        - tlsInfo.ClientConfig
+        - grpc.WithBlock
+        - clientv3.New
+        - clientv3.NewKV
+      package: testing
+      parameters:
+        - name: config
+          type: storagebackend.TransportConfig
+      return_types:
+        - '*clientv3.Client'
+        - clientv3.KV
+        - error
+    - name: StartTestServerOrDie
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 577
+      kind: function
+      signature: ""
+      calls_to:
+        - StartTestServer
+        - t.Fatalf
+      package: testing
+      parameters:
+        - name: t
+          type: testing.TB
+        - name: instanceOptions
+          type: '*TestServerInstanceOptions'
+        - name: flags
+          type: '[]string'
+        - name: storageConfig
+          type: '*storagebackend.Config'
+      return_types:
+        - '*TestServer'
+    - name: createLocalhostListenerOnFreePort
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 587
+      kind: function
+      signature: ""
+      calls_to:
+        - net.Listen
+        - ln.Addr
+        - ln.Close
+        - fmt.Errorf
+        - String
+      package: testing
+      return_types:
+        - net.Listener
+        - int
+        - error
+    - name: pkgPath
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 610
+      kind: function
+      signature: ""
+      calls_to:
+        - runtime.Caller
+        - fmt.Errorf
+        - filepath.Dir
+        - os.Getenv
+        - t.Logf
+        - filepath.Join
+        - filepath.IsAbs
+      package: testing
+      parameters:
+        - name: t
+          type: Logger
+      return_types:
+        - string
+        - error
+call_graph:
+    - from: testing.StartTestServerOrDie
+      to: testing.StartTestServer
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 156
+    - from: main.main
+      to: app.NewAPIServerCommand
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 70
+    - from: options.validateClusterIPFlags
+      to: options.validateMaxCIDRRange
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 86
+    - from: app.CreateKubeAPIServerConfig
+      to: app.buildServiceResolver
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 283
+    - from: app.NewConfig
+      to: app.CreateKubeAPIServerConfig
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 200
+    - from: options.ServerRunOptions.Complete
+      to: options.getServiceIPAndRanges
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/completion.go
+      line: 94
+    - from: options.ServerRunOptions.Complete
+      to: app.Config.Complete
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/config.go
+      line: 61
+    - from: options.CompletedOptions.Validate
+      to: options.CompletedOptions.Validate
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 131
+    - from: options.CompletedOptions.Validate
+      to: options.validateClusterIPFlags
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 36
+    - from: options.CompletedOptions.Validate
+      to: options.validateServiceNodePort
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 98
+    - from: options.CompletedOptions.Validate
+      to: options.validatePublicIPServiceClusterIPRangeIPFamilies
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/validation.go
+      line: 111
+    - from: app.Config.Complete
+      to: app.Config.Complete
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/config.go
+      line: 61
+    - from: app.Run
+      to: app.NewConfig
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/config.go
+      line: 74
+    - from: app.Run
+      to: app.CreateServerChain
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 176
+    - from: testing.StartTestServer
+      to: testing.NewDefaultTestServerOptions
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 144
+    - from: testing.StartTestServer
+      to: options.NewServerRunOptions
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/options.go
+      line: 66
+    - from: testing.StartTestServer
+      to: testing.createLocalhostListenerOnFreePort
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 587
+    - from: testing.StartTestServer
+      to: testing.pkgPath
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 610
+    - from: testing.StartTestServer
+      to: app.NewConfig
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/config.go
+      line: 74
+    - from: testing.StartTestServer
+      to: app.CreateServerChain
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 176
+    - from: testing.StartTestServer
+      to: testing.GetEtcdClients
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 538
+    - from: app.NewAPIServerCommand
+      to: options.NewServerRunOptions
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/options.go
+      line: 66
+    - from: app.NewAPIServerCommand
+      to: app.Run
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 148
+entry_points:
+    - name: main
+      file: etc/projects/kubernetes/cmd/kube-apiserver/apiserver.go
+      line: 32
+      kind: entrypoint
+      signature: ""
+      package: main
+    - name: init
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 65
+      kind: initializer
+      signature: ""
+      package: app
+    - name: init
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 74
+      kind: initializer
+      signature: ""
+      package: testing
+call_tree:
+    - title: func main()
+      name: main
+      package: main
+      file: etc/projects/kubernetes/cmd/kube-apiserver/apiserver.go
+      line: 32
+      kind: entrypoint
+      children:
+        - title: func NewAPIServerCommand() *cobra.Command
+          name: NewAPIServerCommand
+          package: app
+          file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+          line: 70
+          kind: function
+          return_types:
+            - '*cobra.Command'
+          children:
+            - title: func NewServerRunOptions() *ServerRunOptions
+              name: NewServerRunOptions
+              package: options
+              file: etc/projects/kubernetes/cmd/kube-apiserver/app/options/options.go
+              line: 66
+              kind: function
+              return_types:
+                - '*ServerRunOptions'
+              children:
+                - title: controlplaneapiserver.NewOptions()
+                  name: controlplaneapiserver.NewOptions
+                  package: controlplaneapiserver
+                  package_path: k8s.io/kubernetes/pkg/controlplane/apiserver
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: string()
+                  name: string
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: time.Duration()
+                  name: time.Duration
+                  package: time
+                  package_path: time
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: append()
+                  name: append
+                  file: ""
+                  line: 0
+                  kind: external
+            - title: genericapiserver.SetupSignalContext()
+              name: genericapiserver.SetupSignalContext
+              package: genericapiserver
+              package_path: k8s.io/apiserver/pkg/server
+              file: ""
+              line: 0
+              kind: external
+            - title: FeatureGateFor()
+              name: FeatureGateFor
+              file: ""
+              line: 0
+              kind: external
+            - title: Set()
+              name: Set
+              file: ""
+              line: 0
+              kind: external
+            - title: rest.SetDefaultWarningHandler()
+              name: rest.SetDefaultWarningHandler
+              package: rest
+              package_path: k8s.io/client-go/rest
+              file: ""
+              line: 0
+              kind: external
+            - title: verflag.PrintAndExitIfRequested()
+              name: verflag.PrintAndExitIfRequested
+              package: verflag
+              package_path: k8s.io/component-base/version/verflag
+              file: ""
+              line: 0
+              kind: external
+            - title: cmd.Flags()
+              name: cmd.Flags
+              package: cmd
+              file: ""
+              line: 0
+              kind: external
+            - title: logsapi.ValidateAndApply()
+              name: logsapi.ValidateAndApply
+              package: logsapi
+              package_path: k8s.io/component-base/logs/api/v1
+              file: ""
+              line: 0
+              kind: external
+            - title: cliflag.PrintFlags()
+              name: cliflag.PrintFlags
+              package: cliflag
+              package_path: k8s.io/component-base/cli/flag
+              file: ""
+              line: 0
+              kind: external
+            - title: s.Complete()
+              name: s.Complete
+              package: s
+              file: ""
+              line: 0
+              kind: external
+            - title: completedOptions.Validate()
+              name: completedOptions.Validate
+              package: completedOptions
+              file: ""
+              line: 0
+              kind: external
+            - title: len()
+              name: len
+              file: ""
+              line: 0
+              kind: external
+            - title: utilerrors.NewAggregate()
+              name: utilerrors.NewAggregate
+              package: utilerrors
+              package_path: k8s.io/apimachinery/pkg/util/errors
+              file: ""
+              line: 0
+              kind: external
+            - title: AddMetrics()
+              name: AddMetrics
+              file: ""
+              line: 0
+              kind: external
+            - title: func Run(ctx context.Context, opts options.CompletedOptions) error
+              name: Run
+              package: app
+              file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+              line: 148
+              kind: function
+              parameters:
+                - name: ctx
+                  type: context.Context
+                - name: opts
+                  type: options.CompletedOptions
+              return_types:
+                - error
+              children:
+                - title: klog.Infof()
+                  name: klog.Infof
+                  package: klog
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: utilversion.Get()
+                  name: utilversion.Get
+                  package: utilversion
+                  package_path: k8s.io/component-base/version
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: klog.InfoS()
+                  name: klog.InfoS
+                  package: klog
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: os.Getenv()
+                  name: os.Getenv
+                  package: os
+                  package_path: os
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: func NewConfig(opts options.CompletedOptions) (*Config, error)
+                  name: NewConfig
+                  package: app
+                  file: etc/projects/kubernetes/cmd/kube-apiserver/app/config.go
+                  line: 74
+                  kind: function
+                  parameters:
+                    - name: opts
+                      type: options.CompletedOptions
+                  return_types:
+                    - '*Config'
+                    - error
+                  children:
+                    - title: controlplaneapiserver.BuildGenericConfig()
+                      name: controlplaneapiserver.BuildGenericConfig
+                      package: controlplaneapiserver
+                      package_path: k8s.io/kubernetes/pkg/controlplane/apiserver
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: controlplane.DefaultAPIResourceConfigSource()
+                      name: controlplane.DefaultAPIResourceConfigSource
+                      package: controlplane
+                      package_path: k8s.io/kubernetes/pkg/controlplane
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: func CreateKubeAPIServerConfig(opts options.CompletedOptions, genericConfig *genericapiserver.Config, versionedInformers clientgoinformers.SharedInformerFactory, storageFactory *serverstorage.DefaultStorageFactory) (*controlplane.Config, aggregatorapiserver.ServiceResolver, []admission.PluginInitializer, error)
+                      name: CreateKubeAPIServerConfig
+                      package: app
+                      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+                      line: 200
+                      kind: function
+                      parameters:
+                        - name: opts
+                          type: options.CompletedOptions
+                        - name: genericConfig
+                          type: '*genericapiserver.Config'
+                        - name: versionedInformers
+                          type: clientgoinformers.SharedInformerFactory
+                        - name: storageFactory
+                          type: '*serverstorage.DefaultStorageFactory'
+                      return_types:
+                        - '*controlplane.Config'
+                        - aggregatorapiserver.ServiceResolver
+                        - '[]admission.PluginInitializer'
+                        - error
+                      children:
+                        - title: capabilities.Setup()
+                          name: capabilities.Setup
+                          package: capabilities
+                          package_path: k8s.io/kubernetes/pkg/capabilities
+                          file: ""
+                          line: 0
+                          kind: external
+                        - title: kubeAdmissionConfig.New()
+                          name: kubeAdmissionConfig.New
+                          package: kubeAdmissionConfig
+                          file: ""
+                          line: 0
+                          kind: external
+                        - title: fmt.Errorf()
+                          name: fmt.Errorf
+                          package: fmt
+                          package_path: fmt
+                          file: ""
+                          line: 0
+                          kind: external
+                        - title: func buildServiceResolver(enabledAggregatorRouting bool, hostname string, informer clientgoinformers.SharedInformerFactory) (webhook.ServiceResolver, error)
+                          name: buildServiceResolver
+                          package: app
+                          file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+                          line: 283
+                          kind: function
+                          parameters:
+                            - name: enabledAggregatorRouting
+                              type: bool
+                            - name: hostname
+                              type: string
+                            - name: informer
+                              type: clientgoinformers.SharedInformerFactory
+                          return_types:
+                            - webhook.ServiceResolver
+                            - error
+                          children:
+                            - title: proxy.NewEndpointSliceIndexerGetter()
+                              name: proxy.NewEndpointSliceIndexerGetter
+                              package: proxy
+                              package_path: k8s.io/apiserver/pkg/util/proxy
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: EndpointSlices()
+                              name: EndpointSlices
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: V1()
+                              name: V1
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: informer.Discovery()
+                              name: informer.Discovery
+                              package: informer
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: aggregatorapiserver.NewEndpointServiceResolver()
+                              name: aggregatorapiserver.NewEndpointServiceResolver
+                              package: aggregatorapiserver
+                              package_path: k8s.io/kube-aggregator/pkg/apiserver
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: Lister()
+                              name: Lister
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: Services()
+                              name: Services
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: informer.Core()
+                              name: informer.Core
+                              package: informer
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: aggregatorapiserver.NewClusterIPServiceResolver()
+                              name: aggregatorapiserver.NewClusterIPServiceResolver
+                              package: aggregatorapiserver
+                              package_path: k8s.io/kube-aggregator/pkg/apiserver
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: url.Parse()
+                              name: url.Parse
+                              package: url
+                              package_path: net/url
+                              file: ""
+                              line: 0
+                              kind: external
+                            - title: aggregatorapiserver.NewLoopbackServiceResolver()
+                              name: aggregatorapiserver.NewLoopbackServiceResolver
+                              package: aggregatorapiserver
+                              package_path: k8s.io/kube-aggregator/pkg/apiserver
+                              file: ""
+                              line: 0
+                              kind: external
+                        - title: controlplaneapiserver.CreateConfig()
+                          name: controlplaneapiserver.CreateConfig
+                          package: controlplaneapiserver
+                          package_path: k8s.io/kubernetes/pkg/controlplane/apiserver
+                          file: ""
+                          line: 0
+                          kind: external
+                        - title: reconcilers.Type()
+                          name: reconcilers.Type
+                          package: reconcilers
+                          package_path: k8s.io/kubernetes/pkg/controlplane/reconcilers
+                          file: ""
+                          line: 0
+                          kind: external
+                        - title: AsNetworkContext()
+                          name: AsNetworkContext
+                          file: ""
+                          line: 0
+                          kind: external
+                        - title: Lookup()
+                          name: Lookup
+                          file: ""
+                          line: 0
+                          kind: external
+                        - title: Clone()
+                          name: Clone
+                          file: ""
+                          line: 0
+                          kind: external
+                    - title: controlplaneapiserver.CreateAPIExtensionsConfig()
+                      name: controlplaneapiserver.CreateAPIExtensionsConfig
+                      package: controlplaneapiserver
+                      package_path: k8s.io/kubernetes/pkg/controlplane/apiserver
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: webhook.NewDefaultAuthenticationInfoResolverWrapper()
+                      name: webhook.NewDefaultAuthenticationInfoResolverWrapper
+                      package: webhook
+                      package_path: k8s.io/apiserver/pkg/util/webhook
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: controlplaneapiserver.CreateAggregatorConfig()
+                      name: controlplaneapiserver.CreateAggregatorConfig
+                      package: controlplaneapiserver
+                      package_path: k8s.io/kubernetes/pkg/controlplane/apiserver
+                      file: ""
+                      line: 0
+                      kind: external
+                - title: config.Complete()
+                  name: config.Complete
+                  package: config
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: func CreateServerChain(config CompletedConfig) (*aggregatorapiserver.APIAggregator, error)
+                  name: CreateServerChain
+                  package: app
+                  file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+                  line: 176
+                  kind: function
+                  parameters:
+                    - name: config
+                      type: CompletedConfig
+                  return_types:
+                    - '*aggregatorapiserver.APIAggregator'
+                    - error
+                  children:
+                    - title: notfoundhandler.New()
+                      name: notfoundhandler.New
+                      package: notfoundhandler
+                      package_path: k8s.io/apiserver/pkg/util/notfoundhandler
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: New()
+                      name: New
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: genericapiserver.NewEmptyDelegateWithCustomHandler()
+                      name: genericapiserver.NewEmptyDelegateWithCustomHandler
+                      package: genericapiserver
+                      package_path: k8s.io/apiserver/pkg/server
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: ResourceEnabled()
+                      name: ResourceEnabled
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: WithResource()
+                      name: WithResource
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: controlplaneapiserver.CreateAggregatorServer()
+                      name: controlplaneapiserver.CreateAggregatorServer
+                      package: controlplaneapiserver
+                      package_path: k8s.io/kubernetes/pkg/controlplane/apiserver
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: CustomResourceDefinitions()
+                      name: CustomResourceDefinitions
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: V1()
+                      name: V1
+                      file: ""
+                      line: 0
+                      kind: external
+                    - title: Apiextensions()
+                      name: Apiextensions
+                      file: ""
+                      line: 0
+                      kind: external
+                - title: server.PrepareRun()
+                  name: server.PrepareRun
+                  package: server
+                  file: ""
+                  line: 0
+                  kind: external
+                - title: prepared.Run()
+                  name: prepared.Run
+                  package: prepared
+                  file: ""
+                  line: 0
+                  kind: external
+            - title: fmt.Errorf()
+              name: fmt.Errorf
+              package: fmt
+              package_path: fmt
+              file: ""
+              line: 0
+              kind: external
+            - title: cmd.CommandPath()
+              name: cmd.CommandPath
+              package: cmd
+              file: ""
+              line: 0
+              kind: external
+            - title: cmd.SetContext()
+              name: cmd.SetContext
+              package: cmd
+              file: ""
+              line: 0
+              kind: external
+            - title: s.Flags()
+              name: s.Flags
+              package: s
+              file: ""
+              line: 0
+              kind: external
+            - title: verflag.AddFlags()
+              name: verflag.AddFlags
+              package: verflag
+              package_path: k8s.io/component-base/version/verflag
+              file: ""
+              line: 0
+              kind: external
+            - title: namedFlagSets.FlagSet()
+              name: namedFlagSets.FlagSet
+              package: namedFlagSets
+              file: ""
+              line: 0
+              kind: external
+            - title: globalflag.AddGlobalFlags()
+              name: globalflag.AddGlobalFlags
+              package: globalflag
+              package_path: k8s.io/component-base/cli/globalflag
+              file: ""
+              line: 0
+              kind: external
+            - title: cmd.Name()
+              name: cmd.Name
+              package: cmd
+              file: ""
+              line: 0
+              kind: external
+            - title: logs.SkipLoggingConfigurationFlags()
+              name: logs.SkipLoggingConfigurationFlags
+              package: logs
+              package_path: k8s.io/component-base/logs
+              file: ""
+              line: 0
+              kind: external
+            - title: fs.AddFlagSet()
+              name: fs.AddFlagSet
+              package: fs
+              file: ""
+              line: 0
+              kind: external
+            - title: term.TerminalSize()
+              name: term.TerminalSize
+              package: term
+              package_path: k8s.io/component-base/term
+              file: ""
+              line: 0
+              kind: external
+            - title: cmd.OutOrStdout()
+              name: cmd.OutOrStdout
+              package: cmd
+              file: ""
+              line: 0
+              kind: external
+            - title: cliflag.SetUsageAndHelpFunc()
+              name: cliflag.SetUsageAndHelpFunc
+              package: cliflag
+              package_path: k8s.io/component-base/cli/flag
+              file: ""
+              line: 0
+              kind: external
+        - title: cli.Run()
+          name: cli.Run
+          package: cli
+          package_path: k8s.io/component-base/cli
+          file: ""
+          line: 0
+          kind: external
+        - title: os.Exit()
+          name: os.Exit
+          package: os
+          package_path: os
+          file: ""
+          line: 0
+          kind: external
+    - title: func init()
+      name: init
+      package: app
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/server.go
+      line: 65
+      kind: initializer
+      children:
+        - title: utilruntime.Must()
+          name: utilruntime.Must
+          package: utilruntime
+          package_path: k8s.io/apimachinery/pkg/util/runtime
+          file: ""
+          line: 0
+          kind: external
+        - title: logsapi.AddFeatureGates()
+          name: logsapi.AddFeatureGates
+          package: logsapi
+          package_path: k8s.io/component-base/logs/api/v1
+          file: ""
+          line: 0
+          kind: external
+    - title: func init()
+      name: init
+      package: testing
+      file: etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go
+      line: 74
+      kind: initializer
+call_tree_visualization: |
+    Call Tree:
+    ==========
+
+    Entry Point 1: func main()
+    func main() (etc/projects/kubernetes/cmd/kube-apiserver/apiserver.go:32)
+    func NewAPIServerCommand() *cobra.Command (etc/projects/kubernetes/cmd/kube-apiserver/app/server.go:70)
+    func NewServerRunOptions() *ServerRunOptions (etc/projects/kubernetes/cmd/kube-apiserver/app/options/options.go:66)
+    controlplaneapiserver.NewOptions() [external]
+    string() [external]
+    time.Duration() [external]
+    append() [external]
+    genericapiserver.SetupSignalContext() [external]
+    FeatureGateFor() [external]
+    Set() [external]
+    rest.SetDefaultWarningHandler() [external]
+    verflag.PrintAndExitIfRequested() [external]
+    cmd.Flags() [external]
+    logsapi.ValidateAndApply() [external]
+    cliflag.PrintFlags() [external]
+    s.Complete() [external]
+    completedOptions.Validate() [external]
+    len() [external]
+    utilerrors.NewAggregate() [external]
+    AddMetrics() [external]
+    func Run(ctx context.Context, opts options.CompletedOptions) error (etc/projects/kubernetes/cmd/kube-apiserver/app/server.go:148)
+    klog.Infof() [external]
+    utilversion.Get() [external]
+    klog.InfoS() [external]
+    os.Getenv() [external]
+    func NewConfig(opts options.CompletedOptions) (*Config, error) (etc/projects/kubernetes/cmd/kube-apiserver/app/config.go:74)
+    controlplaneapiserver.BuildGenericConfig() [external]
+    controlplane.DefaultAPIResourceConfigSource() [external]
+    func CreateKubeAPIServerConfig(opts options.CompletedOptions, genericConfig *genericapiserver.Config, versionedInformers clientgoinformers.SharedInformerFactory, storageFactory *serverstorage.DefaultStorageFactory) (*controlplane.Config, aggregatorapiserver.ServiceResolver, []admission.PluginInitializer, error) (etc/projects/kubernetes/cmd/kube-apiserver/app/server.go:200)
+    capabilities.Setup() [external]
+    kubeAdmissionConfig.New() [external]
+    fmt.Errorf() [external]
+    func buildServiceResolver(enabledAggregatorRouting bool, hostname string, informer clientgoinformers.SharedInformerFactory) (webhook.ServiceResolver, error) (etc/projects/kubernetes/cmd/kube-apiserver/app/server.go:283)
+    proxy.NewEndpointSliceIndexerGetter() [external]
+    EndpointSlices() [external]
+    V1() [external]
+    informer.Discovery() [external]
+    aggregatorapiserver.NewEndpointServiceResolver() [external]
+    Lister() [external]
+    Services() [external]
+    informer.Core() [external]
+    aggregatorapiserver.NewClusterIPServiceResolver() [external]
+    url.Parse() [external]
+    aggregatorapiserver.NewLoopbackServiceResolver() [external]
+    controlplaneapiserver.CreateConfig() [external]
+    reconcilers.Type() [external]
+    AsNetworkContext() [external]
+    Lookup() [external]
+    Clone() [external]
+    controlplaneapiserver.CreateAPIExtensionsConfig() [external]
+    webhook.NewDefaultAuthenticationInfoResolverWrapper() [external]
+    controlplaneapiserver.CreateAggregatorConfig() [external]
+    config.Complete() [external]
+    func CreateServerChain(config CompletedConfig) (*aggregatorapiserver.APIAggregator, error) (etc/projects/kubernetes/cmd/kube-apiserver/app/server.go:176)
+    notfoundhandler.New() [external]
+    New() [external]
+    genericapiserver.NewEmptyDelegateWithCustomHandler() [external]
+    ResourceEnabled() [external]
+    WithResource() [external]
+    controlplaneapiserver.CreateAggregatorServer() [external]
+    CustomResourceDefinitions() [external]
+    V1() [external]
+    Apiextensions() [external]
+    server.PrepareRun() [external]
+    prepared.Run() [external]
+    fmt.Errorf() [external]
+    cmd.CommandPath() [external]
+    cmd.SetContext() [external]
+    s.Flags() [external]
+    verflag.AddFlags() [external]
+    namedFlagSets.FlagSet() [external]
+    globalflag.AddGlobalFlags() [external]
+    cmd.Name() [external]
+    logs.SkipLoggingConfigurationFlags() [external]
+    fs.AddFlagSet() [external]
+    term.TerminalSize() [external]
+    cmd.OutOrStdout() [external]
+    cliflag.SetUsageAndHelpFunc() [external]
+    cli.Run() [external]
+    os.Exit() [external]
+
+    Entry Point 2: func init()
+    func init() (etc/projects/kubernetes/cmd/kube-apiserver/app/server.go:65)
+    utilruntime.Must() [external]
+    logsapi.AddFeatureGates() [external]
+
+    Entry Point 3: func init()
+    func init() (etc/projects/kubernetes/cmd/kube-apiserver/app/testing/testserver.go:74)
+metadata:
+    call_edges: 23
+    entry_points: 3
+    total_functions: 27

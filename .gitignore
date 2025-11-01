@@ -118,3 +118,6 @@ tags
 .tags
 TAGS
 .TAGS
+
+# test projects
+etc/projects
