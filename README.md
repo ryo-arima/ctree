@@ -2,7 +2,7 @@
 
 > **⚠️ WARNING: This project is currently under active development and is not yet ready for production use.**
 
-A command-line tool for generating call trees from source code using ctags. `ctree` analyzes your codebase and outputs structured call trees in YAML format, making it easier to understand code dependencies and execution flows.
+A command-line tool for generating call trees from source code. `ctree` analyzes your codebase and outputs structured call trees in YAML format, making it easier to understand code dependencies and execution flows.
 
 ## Features
 
@@ -102,9 +102,6 @@ Example configuration:
 [app]
 name = "ctree"
 version = "0.1.0"
-
-[ctags]
-path = "/usr/bin/ctags"
 ```
 
 ## Project Structure
