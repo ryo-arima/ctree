@@ -136,7 +136,7 @@ ctree/
 
 - **Controller Layer**: Handles CLI commands and user input
 - **Usecase Layer**: Contains business logic for code analysis
-- **Repository Layer**: Interfaces with ctags for actual code parsing
+- **Repository Layer**: Interfaces with code parsing infrastructure
 - **Entity Layer**: Defines data structures and models
 
 ## Development Status
